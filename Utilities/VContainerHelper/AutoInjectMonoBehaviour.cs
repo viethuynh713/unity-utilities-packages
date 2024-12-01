@@ -9,7 +9,7 @@ namespace VPackages.Utilities.VContainerHelper
     public abstract class AutoInjectMonoBehaviour : MonoBehaviour
     {
         [Inject] protected IObjectResolver Container;    
-        private const float timeOut = 3f;
+        private const float TimeOut = 3f;
 
         protected virtual void Awake()
         {
@@ -18,18 +18,23 @@ namespace VPackages.Utilities.VContainerHelper
         IEnumerator ResolveAll()    
         {       
             if (Container != null) yield break;
-            var lifetime = FindObjectOfType<LifetimeScope>();        
+            var lifetime = FindObjectOfType<LifetimeScope>();
+            if (!lifetime)
+            {
+                lifetime = new GameObject("Lifetime Scope").AddComponent<LifetimeScope>();
+            }
             float currentTime = 0;        
             yield return new WaitUntil(
                 () =>
                 {
                     currentTime += Time.deltaTime;
-                    if (currentTime >= timeOut) throw new Exception("Not Found LifetimeScope in Scene"); 
+                    if (currentTime >= TimeOut) throw new Exception("Not Found LifetimeScope in Scene"); 
                     return lifetime != null;
                 });        
             Container = lifetime.Container; 
             Container.Inject(this);  
-            OnDependenciesResolved();    }    
+            OnDependenciesResolved();    
+        }    
         protected abstract void OnDependenciesResolved();
     }
 }

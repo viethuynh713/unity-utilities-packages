@@ -5,10 +5,11 @@
 using UnityEngine;
 using System;
 using System.ComponentModel;
+using VPackages.Utilities.VContainerHelper;
 
 namespace Konzit.UI
 {
-    public class BasePopup : MonoBehaviour, IPopup
+    public class BasePopup : AutoInjectMonoBehaviour, IPopup
     {
         [Header("Function Check")]
         [Description("Check some boolean variable under to use function or use build in animation (animation will be update in another version of package)")]
@@ -53,5 +54,10 @@ namespace Konzit.UI
         public virtual void OnHidden() { }
         public virtual void OnClosed() { }
         #endregion
+
+        protected override void OnDependenciesResolved()
+        {
+            
+        }
     }
 }

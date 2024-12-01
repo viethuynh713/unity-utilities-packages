@@ -4,6 +4,7 @@ namespace VPackages.Core.ObserverPattern
     {
         None = 0,
         HelloWorld,
-        NoParam
+        NoParam,
+        EnergyMergeMiniGame
     }
 }

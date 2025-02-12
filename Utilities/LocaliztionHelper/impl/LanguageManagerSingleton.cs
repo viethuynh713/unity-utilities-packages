@@ -36,9 +36,9 @@ namespace VPackages.MultiLanguages
             await _control.ChangeNextLanguageAsync();
         }
 
-        public string GetStringFromDatabase(string table, string key)
+        public string GetStringFromDatabase(string table, string key, params object[] args)
         {
-            return _control.GetStringFromDatabase(table, key);
+            return _control.GetStringFromDatabase(table, key, args);
         }
 
         public T GetAssetFromDatabase<T>() where T : Object
@@ -48,7 +48,7 @@ namespace VPackages.MultiLanguages
 
         public bool TryGetLocaleIndex(string localeCode, out int index)
         {
-            return _control.TryGetLocaleIndex(localeCode,out index);
+            return _control.TryGetLocaleIndex(localeCode, out index);
         }
     }
 }

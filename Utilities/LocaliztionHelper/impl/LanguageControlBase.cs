@@ -7,7 +7,7 @@ namespace VPackages.MultiLanguages
     public class LanguageControlBase : ILanguageControl
     {
         protected int currentIndexLanguage;
-        
+
         public void Initialize()
         {
             if (TryGetLocaleIndex(LocalizationSettings.ProjectLocale.Identifier.Code, out int index))
@@ -36,7 +36,8 @@ namespace VPackages.MultiLanguages
             if (TryGetLocaleIndex(localeCode, out int index))
             {
                 currentIndexLanguage = index;
-                LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndexLanguage];
+                LocalizationSettings.SelectedLocale =
+                    LocalizationSettings.AvailableLocales.Locales[currentIndexLanguage];
             }
             else
             {
@@ -51,9 +52,9 @@ namespace VPackages.MultiLanguages
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[currentIndexLanguage];
         }
 
-        public string GetStringFromDatabase(string table, string key)
+        public string GetStringFromDatabase(string table, string key, params object[] args)
         {
-            return LocalizationSettings.StringDatabase.GetLocalizedString(table, key);
+            return LocalizationSettings.StringDatabase.GetLocalizedString(table, key, args);
         }
 
         public T GetAssetFromDatabase<T>() where T : Object
@@ -73,6 +74,7 @@ namespace VPackages.MultiLanguages
                     return true;
                 }
             }
+
             index = -1;
             return false;
         }

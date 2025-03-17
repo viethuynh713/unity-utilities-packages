@@ -9,7 +9,7 @@ using VPackages.Utilities.VContainerHelper;
 
 namespace Konzit.UI
 {
-    public class BasePopup : AutoInjectMonoBehaviour, IPopup
+    public abstract class BasePopup : AutoInjectMonoBehaviour, IPopup
     {
         [Header("Function Check")]
         [Description("Check some boolean variable under to use function or use build in animation (animation will be update in another version of package)")]

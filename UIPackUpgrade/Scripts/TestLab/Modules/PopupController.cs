@@ -14,7 +14,7 @@ using VPackage.AudioSystem;
 
 namespace Konzit.UI
 {
-    public class UIController : MonoBehaviour, IUIController
+    public class PopupController : MonoBehaviour, IPopupController
     {
         private Dictionary<string, IPopup> _popupDict;
         [SerializeField] private PopupSOs data;

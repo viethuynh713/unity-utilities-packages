@@ -6,7 +6,7 @@ using System;
 
 namespace Konzit.UI
 {
-    public interface IUIController
+    public interface IPopupController
     {
         BasePopup OpenPopupByName(string popupName);
         BasePopup OpenPopupByName<T>(string popupName, T param, Action callback = null);

@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace VPackages.System.SaveLoadSystem.impl
@@ -14,7 +15,7 @@ namespace VPackages.System.SaveLoadSystem.impl
 
         private string HashKey(string key) => _privateKey + key;
 
-        public void SaveData<T>(string key, T value, Action<SaveLoadResult> callback = null)
+        public async UniTask<SaveLoadResult> SaveData<T>(string key, T value)
         {
             try
             {
@@ -29,23 +30,21 @@ namespace VPackages.System.SaveLoadSystem.impl
                     string json = JsonUtility.ToJson(value);
                     PlayerPrefs.SetString(HashKey(key), json);
                 }
-                callback?.Invoke(SaveLoadResult.Success);
+                
+                // Ensure PlayerPrefs are saved
+                PlayerPrefs.Save();
+                
+                return SaveLoadResult.Success;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to save data for key '{key}': {ex.Message}");
-                callback?.Invoke(SaveLoadResult.Fail);
+                return SaveLoadResult.Fail;
             }
         }
 
-        public void GetData<T>(string key, Action<SaveLoadResult, T> callback)
+        public async UniTask<T> GetData<T>(string key)
         {
-            if (callback == null)
-            {
-                Debug.LogError("GetData callback is null.");
-                return;
-            }
-
             try
             {
                 if (PlayerPrefs.HasKey(HashKey(key)))
@@ -55,37 +54,37 @@ namespace VPackages.System.SaveLoadSystem.impl
                     // Handle primary types separately
                     if (typeof(T) == typeof(int))
                     {
-                        callback.Invoke(SaveLoadResult.Success, (T)(object)int.Parse(storedValue));
+                        return (T)(object)int.Parse(storedValue);
                     }
                     else if (typeof(T) == typeof(float))
                     {
-                        callback.Invoke(SaveLoadResult.Success, (T)(object)float.Parse(storedValue));
+                        return (T)(object)float.Parse(storedValue);
                     }
                     else if (typeof(T) == typeof(bool))
                     {
-                        callback.Invoke(SaveLoadResult.Success, (T)(object)bool.Parse(storedValue));
+                        return (T)(object)bool.Parse(storedValue);
                     }
                     else if (typeof(T) == typeof(string))
                     {
-                        callback.Invoke(SaveLoadResult.Success, (T)(object)storedValue);
+                        return (T)(object)storedValue;
                     }
                     else
                     {
                         // For non-primary types, use JSON deserialization
                         T value = JsonUtility.FromJson<T>(storedValue);
-                        callback.Invoke(SaveLoadResult.Success, value);
+                        return value;
                     }
                 }
                 else
                 {
                     // No data found, return default value
-                    callback.Invoke(SaveLoadResult.Fail, default);
+                    return default;
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to load data for key '{key}': {ex.Message}");
-                callback.Invoke(SaveLoadResult.Fail, default);
+                return default;
             }
         }
 

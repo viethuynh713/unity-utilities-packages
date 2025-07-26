@@ -1,12 +1,12 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using VPackages.Core.SingletonPattern;
 
 namespace VPackage.AudioSystem
 {
-	public class AudioManagerMonoBehavior : MonoBehaviour, IAudioManager
+	public class AudioManagerMonoBehavior : ManualSingletonMono<AudioManagerMonoBehavior>, IAudioManager
 	{
 		#region VARIABLES
-		public static AudioManagerMonoBehavior Instance;
 		private const float TIME_TO_CHECK_IDLE_AUDIO_SOURCE = 5f;
 
 		[SerializeField] private AudioData database;

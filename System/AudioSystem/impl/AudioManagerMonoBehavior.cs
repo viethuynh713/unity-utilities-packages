@@ -1,5 +1,6 @@
 ﻿using UnityEditor;
 using UnityEngine;
+using VPackage.HapticSystem;
 using VPackages.Core.SingletonPattern;
 
 namespace VPackage.AudioSystem
@@ -20,24 +21,24 @@ namespace VPackage.AudioSystem
 		#region UNITY METHOD
 		private void GetAudioSetting()
 		{
-			if (PlayerPrefs.HasKey("MuteMusic"))
+			if (PlayerPrefs.HasKey(PlayerRefKey.MUSIC_KEY))
 			{
-				_isMuteMusic = PlayerPrefs.GetInt("MuteMusic") == 1 ? true : false;
+				_isMuteMusic = PlayerPrefs.GetInt(PlayerRefKey.MUSIC_KEY) == 1 ? true : false;
 			}
 			else
 			{
 				_isMuteMusic = false;
-				PlayerPrefs.SetInt("MuteMusic", 0);
+				PlayerPrefs.SetInt(PlayerRefKey.MUSIC_KEY, 0);
 			}
 
-			if (PlayerPrefs.HasKey("MuteSFX"))
+			if (PlayerPrefs.HasKey(PlayerRefKey.SOUND_KEY))
 			{
-				_isMuteSfx = PlayerPrefs.GetInt("MuteSFX") == 1 ? true : false;
+				_isMuteSfx = PlayerPrefs.GetInt(PlayerRefKey.SOUND_KEY) == 1 ? true : false;
 			}
 			else
 			{
 				_isMuteSfx = false;
-				PlayerPrefs.SetInt("MuteSFX", 0);
+				PlayerPrefs.SetInt(PlayerRefKey.SOUND_KEY, 0);
 
             }
 		}
@@ -157,11 +158,11 @@ namespace VPackage.AudioSystem
 			}
 		}
 
-		public void MuteMusic()
+		public void ActivateMusic(AudioName audioName = AudioName.None)
 		{
-			if (PlayerPrefs.HasKey("MuteMusic"))
+			if (PlayerPrefs.HasKey(PlayerRefKey.MUSIC_KEY))
 			{
-				_isMuteMusic = PlayerPrefs.GetInt("MuteMusic") == 1 ? true : false;
+				_isMuteMusic = PlayerPrefs.GetInt(PlayerRefKey.MUSIC_KEY) == 1 ? true : false;
 				foreach (var item in database.GetAudiosByType(AudioType.BGM))
 				{
 					if (item.Source == null)
@@ -170,15 +171,18 @@ namespace VPackage.AudioSystem
 					}
 					item.Source.mute = _isMuteMusic;
 				}
-					
+				if(!_isMuteMusic)
+				{
+					this.PlayMusic(audioName);
+				}
 			}
 		}
 
-		public void MuteSfx()
+		public void ActivateSFX()
 		{
-			if (PlayerPrefs.HasKey("MuteSFX"))
+			if (PlayerPrefs.HasKey(PlayerRefKey.SOUND_KEY))
 			{
-				_isMuteSfx = PlayerPrefs.GetInt("MuteSFX") == 1 ? true : false;
+				_isMuteSfx = PlayerPrefs.GetInt(PlayerRefKey.SOUND_KEY) == 1 ? true : false;
                 foreach (var item in database.GetAudiosByType(AudioType.SFX))
                 {
                     if (item.Source == null)
@@ -242,10 +246,6 @@ namespace VPackage.AudioSystem
                 }
             }
         }
-
-		
-
-
 		#endregion
 	}
 }
